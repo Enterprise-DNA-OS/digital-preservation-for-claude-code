@@ -1,0 +1,4 @@
+xip.reference,xip.title,xip.description,xip.document_type,xip.parent_ref,xip.security_descriptor,custom.donor
+folder-101,Harbour archive,Example collection,SO,,closed,Fictional donor
+asset-101,"Minutes, 1988",Fictional source record,IO,folder-101,open,Fictional donor
+asset-102,Newsletter,Original content exported separately,IO,folder-101,closed,Fictional donor

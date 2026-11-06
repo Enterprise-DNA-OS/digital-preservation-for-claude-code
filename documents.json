@@ -1,11 +1,58 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "for_each": "select id,code from assets order by code",
+    "file": "code",
+    "name": "accession-receipt",
+    "title": "DRAFT accession receipt",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Custody record",
+        "layout": "record",
+        "note": "Verify donor authority and content counts before accepting custody.",
+        "sql": "select code,title,donor,accession_on,rights_evidence,access,owner from assets where id=$1"
+      },
+      {
+        "title": "File inventory",
+        "sql": "select name,bytes,sha256 from files where asset_id=$1 order by name"
+      }
+    ]
+  },
+  {
+    "for_each": "select id,code from assets order by code",
+    "file": "code",
+    "name": "preservation-review",
+    "title": "DRAFT preservation review",
+    "sections": [
+      {
+        "title": "File evidence",
+        "sql": "select name,extension,verified_locations,failures,format_risk,format_action from v_file_health where asset_id=$1 order by name"
+      },
+      {
+        "title": "Checks for review",
+        "sql": "select rule,finding from v_compliance where asset_id=$1 order by rule"
+      },
+      {
+        "title": "Actions",
+        "sql": "select code,title,owner,due_on,status,evidence from actions where asset_id=$1 order by due_on"
+      }
+    ]
+  },
+  {
+    "for_each": "select id,code from assets order by code",
+    "file": "code",
+    "name": "transfer-checklist",
+    "title": "DRAFT transfer checklist",
+    "sections": [
+      {
+        "title": "Authority and restrictions",
+        "layout": "record",
+        "sql": "select code,title,access,personal_data,purpose,rights_evidence from assets where id=$1"
+      },
+      {
+        "title": "Copies last checked",
+        "note": "This document is metadata, not a content transfer. Recheck actual files before handover.",
+        "sql": "select name,location,outcome,checked_at from v_copy_health where asset_id=$1 order by name,location"
+      }
     ]
   }
 ]

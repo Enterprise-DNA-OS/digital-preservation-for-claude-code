@@ -16,3 +16,6 @@ feeds/
 exports/
 imports/
 private-*.json
+
+objects/
+*.png

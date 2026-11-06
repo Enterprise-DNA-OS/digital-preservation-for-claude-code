@@ -1,115 +1,100 @@
-<h1 align="center">Digital Preservation for Claude Code</h1>
+# Digital Preservation for Claude Code
 
-<p align="center">
-  <strong>The open-source digital preservation workbench that is just a database and Claude Code.</strong>
-</p>
+Own the record of what arrived, where its files live and whether the copies still match. Built for archive teams who need a weekly preservation review grounded in their own evidence.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free, MIT. Install and try the demo. | Your accession fields, restrictions, source exports and documents. | Installed and operated through Omni by Enterprise DNA. One setup fee, then a retainer. |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Preservica data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=preservica">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/preservica?utm_source=github&utm_medium=readme&utm_campaign=preservica">How it works</a></td>
-  </tr>
-</table>
+[Get your version built](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=preservica) · [Instead of Preservica](https://enterprisedna.co/omni/instead-of/preservica?utm_source=github&utm_medium=readme&utm_campaign=preservica)
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-preservica">Instead of Preservica</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+## Start with a real file check
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Digital Preservation for Claude Code does the job you pay Preservica for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Preservica dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Preservica per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=preservica).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
-
-## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/digital-preservation-for-claude-code.git
 cd digital-preservation-for-claude-code
 npm install
+npm test
 npm run demo
+npm run preservation -- weekly-review
+npm run docs
+npm run view
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Open the folder with Claude Code, Codex, OpenCode or Cursor. All use the same recipes through CLAUDE.md and AGENTS.md. PGlite runs locally without a server. DATABASE_URL selects PostgreSQL. DATA_DIR chooses the local database, VAULT_DIR chooses original-file storage and OUTPUT_DIR chooses private report/export output. Back up both the database and content files.
 
-### Use it with your own Postgres or Supabase
+The fictional Kauri Heritage Trust demo contains a well-checked accession, a deliberately damaged generated copy, an overdue personal-record review and metadata with no content. The seed is idempotent and leaves existing rows and files in place. Never seed a live archive. PostgreSQL seeding requires ALLOW_DEMO_DATABASE=1 for a disposable database.
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+## Five archive rituals
 
-## The commands
+- Monday review: /weekly-review combines accessions, attention and storage.
+- Accession intake: /add, /ingest and /draft-accession record the receipt and hash the actual content.
+- Integrity round: /fixity-due and /fixity detect changed, missing or unreadable copies.
+- Copy review: /copy-gaps and /replicate make a verified copy from intact content.
+- Preservation meeting: /format-watch, /rights-review and /action-queue turn evidence gaps into owned work.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+32 CLI commands and 35 slash-command recipes. Every CLI command supports --json. Mutations require --actor. Names match without case sensitivity, and unique partial IDs work. Ambiguous references list candidates and exit 1. Run npm run preservation -- help for the full command list.
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+## What the checks mean
 
-## Instead of Preservica
+Ingest copies the supplied original into the private vault, hashes the received bytes, and compares them with the source. Replicate refuses when it cannot find a copy matching that baseline. Fixity records every result and never replaces a baseline to hide damage. The latest result wins; a later mismatch invalidates an earlier pass.
 
-<!-- TODO(author): how to bring data across from Preservica; link docs/replace-preservica.md -->
+Two passing location labels checked within 30 days satisfy the demo’s copy policy. This is a local policy choice, not a preservation certification. A second directory on the same disk is not independent storage. Hashes do not establish readability, provenance before intake, malware safety or lawful access.
 
-## Architecture
+/compliance checks recorded restrictions, retention purpose, review dates, rights evidence, copies and format decisions. [Rules and sources](docs/compliance.md). Access decisions are metadata, not permissions. Use trusted operators, private storage and a database owner role; configure identity and restricted roles for a shared deployment. History is actor-attributed, not tamper-proof.
 
+## Ten questions this build answers
+
+These are working analyses, not an unsupported claim about Preservica’s reporting limits.
+
+1. Which accessions have metadata but no original files? Run accessions.
+2. Which files have fewer than two recently checked storage copies? Run copy-gaps.
+3. Which passing checks are too old for our review policy? Run fixity-due.
+4. Which copies changed since their original baseline? Run fixity.
+5. Which formats have no preservation decision or an overdue one? Run format-watch.
+6. Which personal records need a purpose or access review? Run rights-review.
+7. Who owns the largest backlog of preservation findings? Run owner-load.
+8. Where did identical content arrive under different accessions? Run duplicate-content.
+9. Which location has the most failed or stale copy checks? Run storage.
+10. Who changed a restriction, and what evidence did they record? Run asset.
+
+## Bring your records
+
+The importer reads Preservica’s documented xip CSV export, preserves custom source columns and folder rows, and defaults imported accessions to restricted. An unchanged repeat creates no duplicate assets. Changed rows require --update; changed source restrictions reset the recorded access decision.
+
+```bash
+npm run preservation -- import preservica --file=fixtures/preservica.csv --collection=DEMO --actor="Your name" --dry-run
 ```
-digital-preservation-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+Metadata is not the content archive. Export original files separately with Preservica’s OPEX workflow, map and ingest agreed originals, and reconcile counts, checksums and restrictions. PAX generations, rich metadata, existing vendor history and portals require migration work. [Exact export, mapping and checking steps](docs/replace-preservica.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Documents and read-only views
 
-## Contributing
+Change brand.json to put your business name, logo and colours on accession receipts, preservation reviews and transfer checklists. npm run docs writes private HTML drafts. npm run view renders the week, storage review and formats/access report. /draft-accession and /draft-transfer produce individual drafts. Nothing sends or publishes. [What a front end adds](docs/why-no-front-end.md).
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+## Your first hour: ten things to ask for
 
-## Want it installed and run for you?
+1. Put our archive’s name and logo on the receipt.
+2. Import one collection without saving it.
+3. Map our exported accession number.
+4. Add our donor deed reference.
+5. Set our actual storage location names.
+6. Show the files that have never been checked.
+7. Change our check interval with a tested migration.
+8. Add an owner to every overdue review.
+9. Group our preservation actions by collection.
+10. Draft next week’s archive review.
 
-Enterprise DNA installs Digital Preservation for Claude Code for your business, migrates your Preservica data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+/customise writes and tests a migration. /new-view adds a read-only report. This base has no application front end, automatic format conversion or public access service. Enterprise DNA scopes those with the storage, security and migration requirements for your version.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=preservica)
-- Read more: [enterprisedna.co/omni/instead-of/preservica](https://enterprisedna.co/omni/instead-of/preservica?utm_source=github&utm_medium=readme&utm_campaign=preservica)
+## Verification and price context
 
-## License
+npm test runs in a temporary database and exercises all 32 CLI commands, including corrupt and missing files, guarded replication, rollback, idempotent import, restriction changes, exports and escaped documents. The workflow defines Node 20/22 on Linux/Windows and PostgreSQL 17. Read actual run results before claiming an environment passed. TEST_DATABASE_URL must be an empty disposable database.
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+Preservica Professional and Enterprise are priced privately. A UK council’s historical procurement record shows a five-figure annual fee; it is not a current quote or a verified NZ/AU customer bill. [Selection, scores and sources](docs/research.md).
+
+Enterprise DNA brings across agreed records, checks files and copies, and builds your preservation rules and documents. Omni by Enterprise DNA runs your version for one setup fee, then a retainer. [Book 30 minutes with Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=preservica).
+
+MIT. Not affiliated with Preservica or Anthropic. Hosting, storage and coding-agent usage have their own costs.

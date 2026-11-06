@@ -1,13 +1,45 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Digital Preservation for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Preservation week",
+    "subtitle": "Private snapshot. Check files again before a transfer.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Accessions",
+        "sql": "select code,title,owner,files,underprotected,readiness from v_accession_queue order by code"
+      },
+      {
+        "title": "Attention",
+        "sql": "select * from v_attention order by code,finding"
+      }
+    ]
+  },
+  {
+    "name": "storage",
+    "title": "Storage copy review",
+    "sections": [
+      {
+        "title": "Location labels",
+        "note": "Labels are operator supplied. Separate labels do not prove independent storage.",
+        "sql": "select * from v_storage order by location"
+      },
+      {
+        "title": "Files needing copies",
+        "sql": "select code,name,verified_locations,failures from v_file_health where verified_locations<2 order by code,name"
+      }
+    ]
+  },
+  {
+    "name": "formats",
+    "title": "Format and access review",
+    "sections": [
+      {
+        "title": "Format decisions",
+        "sql": "select extension,risk,action,review_on,evidence from formats order by extension"
+      },
+      {
+        "title": "Record checks",
+        "sql": "select code,rule,finding from v_compliance order by code,rule"
       }
     ]
   }

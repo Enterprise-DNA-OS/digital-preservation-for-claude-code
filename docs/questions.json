@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Which accessions have metadata but no original files?",
+    "command": "accessions"
+  },
+  {
+    "question": "Which files have fewer than two recently checked storage copies?",
+    "command": "copy-gaps"
+  },
+  {
+    "question": "Which passing checks are too old for our review policy?",
+    "command": "fixity-due"
+  },
+  {
+    "question": "Which copies changed since their original baseline?",
+    "command": "fixity"
+  },
+  {
+    "question": "Which formats have no preservation decision or an overdue one?",
+    "command": "format-watch"
+  },
+  {
+    "question": "Which personal records need a purpose or access review?",
+    "command": "rights-review"
+  },
+  {
+    "question": "Who owns the largest backlog of preservation findings?",
+    "command": "owner-load"
+  },
+  {
+    "question": "Where did identical content arrive under different accessions?",
+    "command": "duplicate-content"
+  },
+  {
+    "question": "Which location has the most failed or stale copy checks?",
+    "command": "storage"
+  },
+  {
+    "question": "Who changed a restriction, and what evidence did they record?",
+    "command": "asset"
+  }
+]

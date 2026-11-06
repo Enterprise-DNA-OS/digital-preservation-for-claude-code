@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-11-06T22:19:14.326Z",
+  "fictional": true,
+  "screens": [
+    {
+      "title": "What arrived without its content?",
+      "ask": "Which accessions still need their original files or checked copies?",
+      "command": "node scripts/preservation.mjs accessions",
+      "output": "  code    title                      collection                 owner  files  underprotected  readiness       \n  ------  -------------------------  -------------------------  -----  -----  --------------  ----------------\n  KH-001  Harbour committee minutes  Kauri Heritage Trust demo  Mara   1      0               checked         \n  KH-002  Oral history consent       Kauri Heritage Trust demo  Rangi  1      1               copies_need_work\n  KH-003  Community newsletter       Kauri Heritage Trust demo  Mara   0      0               content_missing"
+    },
+    {
+      "title": "Which originals need another checked copy?",
+      "ask": "Show me the files that do not have two recently verified copies.",
+      "command": "node scripts/preservation.mjs copy-gaps",
+      "output": "  code    name         copies  verified_locations  failures\n  ------  -----------  ------  ------------------  --------\n  KH-002  consent.wri  2       0                   1"
+    },
+    {
+      "title": "Which restrictions need a decision?",
+      "ask": "Which records need a rights, access or retention review?",
+      "command": "node scripts/preservation.mjs rights-review",
+      "output": "  code    title                 access  personal_data  purpose  review_on   rights_evidence\n  ------  --------------------  ------  -------------  -------  ----------  ---------------\n  KH-002  Oral history consent  public  true                    2026-10-30"
+    }
+  ]
+}
